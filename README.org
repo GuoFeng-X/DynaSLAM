@@ -1,0 +1,62 @@
+* Docker
+** Get docker image
+#+begin_example
+docker pull yubaoliu/cuda-9-cv2:Mask-RCNN
+#+end_example
+** Run container
+#+begin_example
+	docker run -it --rm \
+		-v /home/yubao/data/share:/root \
+        -v /home/yubao/data/Dataset:/Dataset \
+        --net host \
+		--runtime=nvidia \
+        -e DISPLAY=$$DISPLAY \
+	    -v $$HOME/.Xauthority:/root/.Xauthority \
+        --name cuda9cv2 \
+		yubaoliu/cuda-9-cv2
+#+end_example
+** Test DynaSLAM
+#+begin_example
+./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/
+TUM3.yaml /Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz /Dataset/TUM/freiburg3/rgbd_datase
+t_freiburg3_walking_xyz/associate.txt ../Mask_RCNN ./output
+#+end_example
+* Dependences
+** python
+2.7
+** tensorflow
+1.3.0/1.4.0 -> keras 2.0.8
+** Keras
+#+begin_example
+pip install 'keras==2.1.6' --force-reinstall
+#+end_example
+** cuda
+10.1
+* Test or Check Mask_RCNN
+#+begin_example
+DynaSLAM$ python src/python/Check.py
+#+end_example
+
+If everything works fun:
+
+#+begin_example
+::::
+Initialated Mask RCNN network...
+Mask R-CNN is correctly working
+#+end_example
+* Result
+[[./data/rgb/1341846313.592026.png]]
+[[./data/rgb/1341846316.570121.png]]
+[[./data/rgb/1341846325.417931.png]]
+* Others
+#+begin_example
+export TF_XLA_FLAGS=--tf_xla_cpu_global_jit
+#+end_example
+
+* Problems
+**  Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA 
+#+begin_example
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+#+end_example
+

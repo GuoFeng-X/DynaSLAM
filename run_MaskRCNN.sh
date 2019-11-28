@@ -1,0 +1,1 @@
+./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUM3.yaml ~/data/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz ~/data/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz/associate.txt /home/yubao/data/Project/Mask_RCNN/ /tmp/

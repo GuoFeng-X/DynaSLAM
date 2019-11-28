@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(DynaSLAM)
 
+SET(CMAKE_BUILD_TYPE "Debug")
+#SET($ENV{OpenCV} "/home/yubao/data/software/OpenCV-2.4.11/share/OpenCV")
+
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
   # SET(CMAKE_BUILD_TYPE Debug)
@@ -8,8 +11,8 @@ ENDIF()
 
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3 -march=native")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -g  -Wall  -O3 -march=native ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall   -O3 -march=native")
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O0 -march=native ")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O0 -march=native")
@@ -33,7 +36,7 @@ endif()
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
 message("PROJECT_SOURCE_DIR: " ${OpenCV_DIR})
-find_package(OpenCV 2.4.11 QUIET)
+find_package(OpenCV 2.4.13 QUIET) #2.4.11
 if(NOT OpenCV_FOUND)
     message("OpenCV > 2.4.11 not found.")
     find_package(OpenCV 3.0 QUIET)
@@ -147,7 +150,7 @@ add_executable(mono_kitti
 Examples/Monocular/mono_kitti.cc)
 target_link_libraries(mono_kitti ${PROJECT_NAME})
 
-add_executable(mono_carla
-Examples/Monocular/mono_carla.cc)
-target_link_libraries(mono_carla ${PROJECT_NAME})
+#add_executable(mono_carla
+#Examples/Monocular/mono_carla.cc)
+#target_link_libraries(mono_carla ${PROJECT_NAME})
 
