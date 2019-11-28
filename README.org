@@ -1,10 +1,11 @@
 * Docker
 ** Get docker image
-#+begin_example
+#+begin_example sh
 docker pull yubaoliu/cuda-9-cv2:Mask-RCNN
 #+end_example
+
 ** Run container
-#+begin_example
+#+begin_example sh
 docker run -it --rm \
 	-v /home/yubao/data/share:/root \
     -v /home/yubao/data/Dataset:/Dataset \
@@ -20,8 +21,7 @@ docker run -it --rm \
 ./Examples/RGB-D/rgbd_tum  \
 Vocabulary/ORBvoc.txt Examples/RGB-D/ \
 TUM3.yaml /Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz \
- /Dataset/TUM/freiburg3/rgbd_datase \
-t_freiburg3_walking_xyz/associate.txt \
+/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz/associate.txt \
 ../Mask_RCNN ./output
 #+end_example
 * Dependences
@@ -46,12 +46,14 @@ If everything works fun:
 Initialated Mask RCNN network...
 Mask R-CNN is correctly working
 #+end_example
+
 * Result
+
 [[./data/rgb/1341846313.592026.png]]
 
 [[./data/rgb/1341846316.570121.png]]
-[[
-./data/rgb/1341846325.417931.png]]
+
+[[./data/rgb/1341846325.417931.png]]
 
 * README
 Original README.md -> README.md.old
