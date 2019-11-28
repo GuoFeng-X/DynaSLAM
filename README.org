@@ -46,17 +46,10 @@ Mask R-CNN is correctly working
 #+end_example
 * Result
 [[./data/rgb/1341846313.592026.png]]
+
 [[./data/rgb/1341846316.570121.png]]
-[[./data/rgb/1341846325.417931.png]]
-* Others
-#+begin_example
-export TF_XLA_FLAGS=--tf_xla_cpu_global_jit
-#+end_example
+[[
+./data/rgb/1341846325.417931.png]]
 
-* Problems
-**  Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA 
-#+begin_example
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
-#+end_example
-
+* README
+Original README.md -> README.md.old
