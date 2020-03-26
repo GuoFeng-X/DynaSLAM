@@ -1,0 +1,29 @@
+version: '2.3'
+services:
+  dynaslam:
+    image: dynaslam:latest
+    build:
+        context: .
+        args:
+            cuda_version: 9.0
+            cudnn_version: 7
+            ubuntu_version: 16.04
+    container_name: DynaSLAM
+    runtime: nvidia
+    command: lxterm
+    environment:
+        - DISPLAY
+        - QT_X11_NO_MITSHM=1
+    volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        - ..:/root/DynaSlam
+        - ${DATASET_DIR}:/root/Dataset
+        - DynaSLAM:/root
+    cap_add:
+        - SYS_PTRACE
+    ports:
+        - ${PORT}:8888
+    privileged: true
+
+volumes:
+    DynaSLAM:

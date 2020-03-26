@@ -9,7 +9,7 @@
 #define __MASKNET_H
 
 #ifndef NULL
-#define NULL   ((void *) 0)
+#define NULL ((void *)0)
 #endif
 
 #include <python2.7/Python.h>
@@ -28,26 +28,26 @@
 namespace DynaSLAM
 {
 
-class SegmentDynObject{
+class SegmentDynObject
+{
 private:
-	NDArrayConverter *cvt; 	/*!< Converter to NumPy Array from cv::Mat */
-	PyObject *py_module; 	/*!< Module of python where the Mask algorithm is implemented */
-	PyObject *py_class; 	/*!< Class to be instanced */
-	PyObject *net; 			/*!< Instance of the class */
-	std::string py_path; 	/*!< Path to be included to the environment variable PYTHONPATH */
+	NDArrayConverter *cvt;	 /*!< Converter to NumPy Array from cv::Mat */
+	PyObject *py_module;	 /*!< Module of python where the Mask algorithm is implemented */
+	PyObject *py_class;		 /*!< Class to be instanced */
+	PyObject *net;			 /*!< Instance of the class */
+	std::string py_path;	 /*!< Path to be included to the environment variable PYTHONPATH */
 	std::string module_name; /*!< Detailed description after the member */
-	std::string class_name; /*!< Detailed description after the member */
-        std::string get_dyn_seg; 	/*!< Detailed description after the member */
+	std::string class_name;	 /*!< Detailed description after the member */
+	std::string get_dyn_seg; /*!< Detailed description after the member */
 
 	void ImportSettings();
-public:
 
+public:
 	SegmentDynObject();
-        ~SegmentDynObject();
-        cv::Mat GetSegmentation(cv::Mat &image, std::string dir="no_save", std::string rgb_name="no_file");
+	~SegmentDynObject();
+	cv::Mat GetSegmentation(cv::Mat &image, std::string dir = "no_save", std::string rgb_name = "no_file");
 };
 
-
-}
+} // namespace DynaSLAM
 
 #endif

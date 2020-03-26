@@ -7,13 +7,12 @@
 *
 */
 
-
-#include<iostream>
-#include<algorithm>
-#include<fstream>
-#include<chrono>
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <chrono>
 #include <unistd.h>
-#include<opencv2/core/core.hpp>
+#include <opencv2/core/core.hpp>
 
 #include "Geometry.h"
 #include "MaskNet.h"
@@ -26,9 +25,10 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
 
 int main(int argc, char **argv)
 {
-    if(argc != 5 && argc != 6 && argc != 7)
+    if (argc != 5 && argc != 6 && argc != 7)
     {
-        cerr << endl << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association (path_to_masks) (path_to_output)" << endl;
+        cerr << endl
+             << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association (path_to_masks) (path_to_output)" << endl;
         return 1;
     }
 
@@ -43,20 +43,22 @@ int main(int argc, char **argv)
     int nImages = vstrImageFilenamesRGB.size();
     std::cout << "nImages: " << nImages << std::endl;
 
-    if(vstrImageFilenamesRGB.empty())
+    if (vstrImageFilenamesRGB.empty())
     {
-        cerr << endl << "No images found in provided path." << endl;
+        cerr << endl
+             << "No images found in provided path." << endl;
         return 1;
     }
-    else if(vstrImageFilenamesD.size()!=vstrImageFilenamesRGB.size())
+    else if (vstrImageFilenamesD.size() != vstrImageFilenamesRGB.size())
     {
-        cerr << endl << "Different number of images for rgb and depth." << endl;
+        cerr << endl
+             << "Different number of images for rgb and depth." << endl;
         return 1;
     }
 
     // Initialize Mask R-CNN
     DynaSLAM::SegmentDynObject *MaskNet;
-    if (argc==6 || argc==7)
+    if (argc == 6 || argc == 7)
     {
         cout << "Loading Mask R-CNN. This could take a while..." << endl;
         MaskNet = new DynaSLAM::SegmentDynObject();
@@ -64,23 +66,25 @@ int main(int argc, char **argv)
     }
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::RGBD,true);
+    ORB_SLAM2::System SLAM(argv[1], argv[2], ORB_SLAM2::System::RGBD, true);
 
     // Vector for tracking time statistics
     vector<float> vTimesTrack;
     vTimesTrack.resize(nImages);
 
-    cout << endl << "-------" << endl;
+    cout << endl
+         << "-------" << endl;
     cout << "Start processing sequence ..." << endl;
-    cout << "Images in the sequence: " << nImages << endl << endl;
+    cout << "Images in the sequence: " << nImages << endl
+         << endl;
 
     // Dilation settings
     int dilation_size = 15;
     cv::Mat kernel = getStructuringElement(cv::MORPH_ELLIPSE,
-                                           cv::Size( 2*dilation_size + 1, 2*dilation_size+1 ),
-                                           cv::Point( dilation_size, dilation_size ) );
+                                           cv::Size(2 * dilation_size + 1, 2 * dilation_size + 1),
+                                           cv::Point(dilation_size, dilation_size));
 
-    if (argc==7)
+    if (argc == 7)
     {
         std::string dir = string(argv[6]);
         mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -90,23 +94,26 @@ int main(int argc, char **argv)
         mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         dir = string(argv[6]) + "/mask/";
         mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        dir = string(argv[6]) + "/label/";
+        mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     }
 
     // Main loop
-        cv::Mat imRGB, imD;
-        cv::Mat imRGBOut, imDOut,maskOut;
+    cv::Mat imRGB, imD;
+    cv::Mat imRGBOut, imDOut, maskOut;
 
-    for(int ni=0; ni<nImages; ni++)
+    for (int ni = 0; ni < nImages; ni++)
     {
         // Read image and depthmap from file
-        imRGB = cv::imread(string(argv[3])+"/"+vstrImageFilenamesRGB[ni],CV_LOAD_IMAGE_UNCHANGED);
-        imD = cv::imread(string(argv[3])+"/"+vstrImageFilenamesD[ni],CV_LOAD_IMAGE_UNCHANGED);
+        imRGB = cv::imread(string(argv[3]) + "/" + vstrImageFilenamesRGB[ni], CV_LOAD_IMAGE_UNCHANGED);
+        imD = cv::imread(string(argv[3]) + "/" + vstrImageFilenamesD[ni], CV_LOAD_IMAGE_UNCHANGED);
 
         double tframe = vTimestamps[ni];
 
-        if(imRGB.empty())
+        if (imRGB.empty())
         {
-            cerr << endl << "Failed to load image at: "
+            cerr << endl
+                 << "Failed to load image at: "
                  << string(argv[3]) << "/" << vstrImageFilenamesRGB[ni] << endl;
             return 1;
         }
@@ -118,19 +125,26 @@ int main(int argc, char **argv)
 #endif
 
         // Segment out the images
-        cv::Mat mask = cv::Mat::ones(480,640,CV_8U);
+        //https://docs.opencv.org/trunk/d9/d61/tutorial_py_morphological_ops.html
+        cv::Mat mask = cv::Mat::ones(480, 640, CV_8U);
         if (argc == 6 || argc == 7)
         {
             cv::Mat maskRCNN;
-            maskRCNN = MaskNet->GetSegmentation(imRGB,string(argv[5]),vstrImageFilenamesRGB[ni].replace(0,4,""));
+            maskRCNN = MaskNet->GetSegmentation(imRGB, string(argv[5]), vstrImageFilenamesRGB[ni].replace(0, 4, ""));
             cv::Mat maskRCNNdil = maskRCNN.clone();
-            cv::dilate(maskRCNN,maskRCNNdil, kernel);
-            mask = mask - maskRCNNdil;
+            cv::dilate(maskRCNN, maskRCNNdil, kernel);
+            mask = mask - maskRCNNdil;  //inverse
         }
 
         // Pass the image to the SLAM system
-        if (argc == 7){SLAM.TrackRGBD(imRGB,imD,mask,tframe,imRGBOut,imDOut,maskOut);}
-        else {SLAM.TrackRGBD(imRGB,imD,mask,tframe);}
+        if (argc == 7)
+        {
+            SLAM.TrackRGBD(imRGB, imD, mask, tframe, imRGBOut, imDOut, maskOut);
+        }
+        else
+        {
+            SLAM.TrackRGBD(imRGB, imD, mask, tframe);
+        }
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
@@ -140,40 +154,42 @@ int main(int argc, char **argv)
 
         if (argc == 7)
         {
-            cv::imwrite(string(argv[6]) + "/rgb/" + vstrImageFilenamesRGB[ni],imRGBOut);
-            vstrImageFilenamesD[ni].replace(0,6,"");
-            cv::imwrite(string(argv[6]) + "/depth/" + vstrImageFilenamesD[ni],imDOut);
-            cv::imwrite(string(argv[6]) + "/mask/" + vstrImageFilenamesRGB[ni],maskOut);
+            cv::imwrite(string(argv[6]) + "/rgb/" + vstrImageFilenamesRGB[ni], imRGBOut);
+            vstrImageFilenamesD[ni].replace(0, 6, "");
+            cv::imwrite(string(argv[6]) + "/depth/" + vstrImageFilenamesD[ni], imDOut);
+            cv::imwrite(string(argv[6]) + "/mask/" + vstrImageFilenamesRGB[ni], maskOut);
+            cv::imwrite(string(argv[6]) + "/label/" + vstrImageFilenamesRGB[ni], mask);
         }
 
-        double ttrack= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+        double ttrack = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count();
 
-        vTimesTrack[ni]=ttrack;
+        vTimesTrack[ni] = ttrack;
 
         // Wait to load the next frame
-        double T=0;
-        if(ni<nImages-1)
-            T = vTimestamps[ni+1]-tframe;
-        else if(ni>0)
-            T = tframe-vTimestamps[ni-1];
+        double T = 0;
+        if (ni < nImages - 1)
+            T = vTimestamps[ni + 1] - tframe;
+        else if (ni > 0)
+            T = tframe - vTimestamps[ni - 1];
 
-        if(ttrack<T)
-            usleep((T-ttrack)*1e6);
+        if (ttrack < T)
+            usleep((T - ttrack) * 1e6);
     }
 
     // Stop all threads
     SLAM.Shutdown();
 
     // Tracking time statistics
-    sort(vTimesTrack.begin(),vTimesTrack.end());
+    sort(vTimesTrack.begin(), vTimesTrack.end());
     float totaltime = 0;
-    for(int ni=0; ni<nImages; ni++)
+    for (int ni = 0; ni < nImages; ni++)
     {
-        totaltime+=vTimesTrack[ni];
+        totaltime += vTimesTrack[ni];
     }
-    cout << "-------" << endl << endl;
-    cout << "median tracking time: " << vTimesTrack[nImages/2] << endl;
-    cout << "mean tracking time: " << totaltime/nImages << endl;
+    cout << "-------" << endl
+         << endl;
+    cout << "median tracking time: " << vTimesTrack[nImages / 2] << endl;
+    cout << "mean tracking time: " << totaltime / nImages << endl;
 
     // Save camera trajectory
     SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
@@ -187,11 +203,11 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
 {
     ifstream fAssociation;
     fAssociation.open(strAssociationFilename.c_str());
-    while(!fAssociation.eof())
+    while (!fAssociation.eof())
     {
         string s;
-        getline(fAssociation,s);
-        if(!s.empty())
+        getline(fAssociation, s);
+        if (!s.empty())
         {
             stringstream ss;
             ss << s;
@@ -204,7 +220,6 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
             ss >> t;
             ss >> sD;
             vstrImageFilenamesD.push_back(sD);
-
         }
     }
 }

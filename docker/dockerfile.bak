@@ -1,0 +1,100 @@
+# versiion
+ARG cuda_version=9.0
+ARG cudnn_version=7
+ARG ubuntu_version=16.04
+
+# base image
+FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel-ubuntu${ubuntu_version}
+
+# maintainer
+MAINTAINER MAINTAINER_NAME yubaoliu89@gmail.com
+
+# Install dependencies
+RUN apt-get update \
+    && apt-get install -y --fix-missing \
+        pkg-config \
+        xterm \
+        lxterminal \
+        wget git htop libhdf5-dev g++ graphviz openmpi-bin \
+        software-properties-common \
+        lsb-release \
+        build-essential  \
+        net-tools \
+        iputils-ping \
+        python-pip \
+        python-dev \
+        python-tk \
+        vim \
+        openssh-server \
+        language-pack-ja \
+        language-pack-en \
+        curl zip unzip \
+        libboost-all-dev \
+        libgflags-dev \
+        libgoogle-glog-dev \
+        libhdf5-serial-dev \
+        libleveldb-dev \
+        liblmdb-dev \
+        bash-completion \
+        sudo \
+        libglew-dev \
+        libeigen3-dev \
+        cmake-qt-gui \
+        qtbase5-dev \
+        qt5-default \
+        freeglut3-dev  \
+        autoconf \
+        gdb \
+        && apt autoremove -y 
+        
+# update pip
+RUN curl -kL https://bootstrap.pypa.io/get-pip.py | python 
+
+WORKDIR /root
+
+# OpenCV2
+COPY install_opencv2.sh .
+
+RUN chmod 755 /root/install_opencv2.sh \
+    && bash -c "/root/install_opencv2.sh"
+
+# Environment setting
+ENV OpenCV_DIR /usr/share/OpenCV
+# Python Include path
+ENV PYTHON_INCLUDE_DIRS /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy
+
+# Pangolin
+RUN git clone https://github.com/stevenlovegrove/Pangolin.git \
+    && cd Pangolin \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j \
+    && make install 
+
+# Python dependencies
+COPY requirements.txt /root/requirements.txt
+
+# Install mask rcnn
+RUN git clone https://github.com/yubaoliu/Mask_RCNN.git \
+    && cd Mask_RCNN \
+    && mv requirements.txt requirements.txt.bk \
+    && mv /root/requirements.txt . \
+    && pip install -r requirements.txt \
+    && python setup.py install
+
+# pycoco
+# RUN git clone https://github.com/waleedka/coco.git \
+#     && cd coco/PythonAPI \
+#     && make install \
+#     && python setup.py install
+
+RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
+
+RUN ldconfig
+
+COPY entrypoint.sh . 
+
+RUN  chmod +x /root/entrypoint.sh
+
+ENTRYPOINT ["/root/entrypoint.sh"]

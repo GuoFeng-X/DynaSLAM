@@ -16,6 +16,7 @@ docker run -it --rm \
     --name cuda9cv2 \
 	yubaoliu/cuda-9-cv2
 #+end_example
+
 ** Test DynaSLAM
 #+begin_example
 ./Examples/RGB-D/rgbd_tum  \
@@ -24,6 +25,7 @@ TUM3.yaml /Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz \
 /Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz/associate.txt \
 ../Mask_RCNN ./output
 #+end_example
+
 * Dependences
 - python: 2.7
 - tensorflow: 1.3.0
@@ -55,5 +57,7 @@ Mask R-CNN is correctly working
 
 [[./data/rgb/1341846325.417931.png]]
 
+
 * README
 Original README.md -> README.md.old
+

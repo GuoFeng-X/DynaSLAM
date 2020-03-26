@@ -2,17 +2,16 @@ cmake_minimum_required(VERSION 2.8)
 project(DynaSLAM)
 
 SET(CMAKE_BUILD_TYPE "Debug")
-#SET($ENV{OpenCV} "/home/yubao/data/software/OpenCV-2.4.11/share/OpenCV")
+#SET($ENV{OpenCV_DIR} "/home/yubao/data/software/OpenCV-2.4.11/share/OpenCV")
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
-  # SET(CMAKE_BUILD_TYPE Debug)
 ENDIF()
 
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -g  -Wall  -O3 -march=native ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall   -O3 -march=native")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -g  -Wall  -O2 -march=native ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall   -O2 -march=native")
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O0 -march=native ")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O0 -march=native")
@@ -35,8 +34,7 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-message("PROJECT_SOURCE_DIR: " ${OpenCV_DIR})
-find_package(OpenCV 2.4.13 QUIET) #2.4.11
+find_package(OpenCV 2.4 REQUIRED) #2.4.11
 if(NOT OpenCV_FOUND)
     message("OpenCV > 2.4.11 not found.")
     find_package(OpenCV 3.0 QUIET)
@@ -45,6 +43,9 @@ if(NOT OpenCV_FOUND)
     endif()
 endif()
 
+message("PROJECT_SOURCE_DIR: " ${OpenCV_DIR})
+
+# Not yet test OpenCV > 3.0
 #find_package(OpenCV 3.0 QUIET)
 #if(NOT OpenCV_FOUND)
 #   find_package(OpenCV 2.4.3 QUIET)
@@ -79,13 +80,16 @@ find_package(Pangolin REQUIRED)
 
 set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy)
 
+message("PYTHON_INCLUDE_DIRS: " ${PYTHON_INCLUDE_DIRS} )
+
 include_directories(
 ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 /usr/include/python2.7/
-/usr/lib/python2.7/dist-packages/numpy/core/include/numpy/
+${PYTHON_INCLUDE_DIRS} 
+#/usr/lib/python2.7/dist-packages/numpy/core/include/numpy/
 ${Boost_INCLUDE_DIRS}
 )
 message("PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR})
@@ -127,7 +131,6 @@ ${Boost_LIBRARIES}
 )
 
 # Build examples
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
 
 add_executable(rgbd_tum
@@ -136,19 +139,19 @@ target_link_libraries(rgbd_tum ${PROJECT_NAME})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
-add_executable(stereo_kitti
-Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME})
+# add_executable(stereo_kitti
+# Examples/Stereo/stereo_kitti.cc)
+# target_link_libraries(stereo_kitti ${PROJECT_NAME})
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
-add_executable(mono_tum
-Examples/Monocular/mono_tum.cc)
-target_link_libraries(mono_tum ${PROJECT_NAME})
+# add_executable(mono_tum
+# Examples/Monocular/mono_tum.cc)
+# target_link_libraries(mono_tum ${PROJECT_NAME})
 
-add_executable(mono_kitti
-Examples/Monocular/mono_kitti.cc)
-target_link_libraries(mono_kitti ${PROJECT_NAME})
+# add_executable(mono_kitti
+# Examples/Monocular/mono_kitti.cc)
+# target_link_libraries(mono_kitti ${PROJECT_NAME})
 
 #add_executable(mono_carla
 #Examples/Monocular/mono_carla.cc)

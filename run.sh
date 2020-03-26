@@ -1,1 +1,1 @@
-./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUM3.yaml ~/data/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz ~/data/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz/associate.txt 
+./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUM3.yaml ~/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz ~/Dataset/TUM/freiburg3/rgbd_dataset_freiburg3_walking_xyz/associations.txt /root/Mask_RCNN/ /tmp/
