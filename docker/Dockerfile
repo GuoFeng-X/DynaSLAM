@@ -39,7 +39,8 @@ RUN apt-get update && apt-get install -y --fix-missing  \
     qt5-default \
     libeigen3-dev \
     libboost-all-dev \
-    libglew-dev
+    libglew-dev \
+    parcellite
 
 # update pip
 RUN curl -kL https://bootstrap.pypa.io/get-pip.py | python 
@@ -57,7 +58,7 @@ RUN git clone https://github.com/stevenlovegrove/Pangolin.git \
     && mkdir build \
     && cd build \
     && cmake .. \
-    && make -j \
+    && make -j 3 \
     && make install
 # Install mask rcnn dependencies
 COPY requirements.txt /root/requirements.txt
