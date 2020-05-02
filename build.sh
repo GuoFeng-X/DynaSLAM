@@ -6,7 +6,7 @@ rm build -rf
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j
+make -j  3
 
 echo "============================================"
 echo "Configuring and building Thirdparty/g2o ..."
@@ -15,7 +15,7 @@ rm build -rf
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j
+make -j 3
 
 echo "============================================"
 cd ../../../
@@ -32,5 +32,5 @@ rm build -rf
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j
+make -j 3
 
