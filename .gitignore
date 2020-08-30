@@ -29,6 +29,7 @@ src/python/shapes.py
 src/python/__pycache__/
 
 src/python/mask_rcnn_coco\.h5
+src/python/mask_rcnn_balloon.h5
 
 CameraTrajectory.txt
 KeyFrameTrajectory.txt

@@ -26,15 +26,17 @@ chmod +x build.sh
 
 # RUN
 ## Mount dataset folder
+
 ``vim docker/.env``:
 Modify ``DATASET_DIR``
 
 ## Get module
+
 ```sh
-echo "get mask_rcnn_coco.h5"
+echo "get trained model"
 cd DynaSLAM/src/python/
-wget https://github.com/matterport/Mask_RCNN/releases/download/v2.1/mask_rcnn_balloon.h5 
-unzip balloon_dataset.zip
+wget -c https://github.com/matterport/Mask_RCNN/releases/download/v1.0/mask_rcnn_coco.h5
+wget -c  https://github.com/matterport/Mask_RCNN/releases/download/v2.1/mask_rcnn_balloon.h5 
 ```
 
 ## Kick of docker container
