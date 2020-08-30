@@ -40,7 +40,38 @@ RUN apt-get update && apt-get install -y --fix-missing  \
     libeigen3-dev \
     libboost-all-dev \
     libglew-dev \
-    parcellite
+    parcellite \
+    automake \
+    autoconf \
+    libssl-dev \
+    libreadline-dev \
+    libncurses5-dev \
+    libevent-dev
+
+# Install rbenv
+RUN apt autoremove -y ruby*  \
+    && apt autoremove  \
+    && apt update  \
+    && git clone https://github.com/rbenv/rbenv.git ~/.rbenv \
+    && echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc  \
+    && echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+ENV PATH /root/.rbenv/shims:/root/.rbenv/bin:$PATH
+# Install ruby-build & ruby
+RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build  \
+    && ~/.rbenv/bin/rbenv install 2.6.0  \
+    && ~/.rbenv/bin/rbenv global 2.6.0
+# Initiarize ruby encording
+ENV RUBYOPT -EUTF-8
+
+
+# Tmux
+RUN git clone https://github.com/tmux/tmux.git \
+    && cd tmux \
+    && git checkout 2.6 \
+    && sh autogen.sh \
+    && ./configure && make && make install \
+    && gem install --user-install tmuxinator
+
 
 # update pip
 RUN curl -kL https://bootstrap.pypa.io/get-pip.py | python 
@@ -73,6 +104,13 @@ RUN git clone https://github.com/yubaoliu/Mask_RCNN.git \
 
 # coco API
 RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
+
+# dotfile
+RUN cd /root \
+    && git clone https://github.com/yubaoliu/dotfiles.git \
+    && cd dotfiles \
+    && ./deploy.sh \
+    && touch ~/local_config.sh
 
 
 CMD ["/bin/bash"]
