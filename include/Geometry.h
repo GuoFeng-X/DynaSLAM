@@ -49,7 +49,6 @@ private:
     void FillRGBD(const ORB_SLAM2::Frame &currentFrame,cv::Mat &mask,cv::Mat &imGray,cv::Mat &imDepth);
     void FillRGBD(const ORB_SLAM2::Frame &currentFrame,cv::Mat &mask,cv::Mat &imGray,cv::Mat &imDepth,cv::Mat &imRGB);
 
-
     cv::Mat DepthRegionGrowing(const vector<DynKeyPoint> &vDynPoints,const cv::Mat &imDepth);
 
     bool isRotationMatrix(const cv::Mat &R);

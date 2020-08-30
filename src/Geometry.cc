@@ -53,7 +53,6 @@ void Geometry::GeometricModelUpdateDB(const ORB_SLAM2::Frame &currentFrame){
 }
 
 vector<ORB_SLAM2::Frame> Geometry::GetRefFrames(const ORB_SLAM2::Frame &currentFrame){
-
     cv::Mat rot1 = currentFrame.mTcw.rowRange(0,3).colRange(0,3);
     cv::Mat eul1 = rotm2euler(rot1);
     cv::Mat trans1 = currentFrame.mTcw.rowRange(0,3).col(3);
@@ -1026,7 +1025,7 @@ cv::Mat Geometry::RegionGrowing(const cv::Mat &im,int &x,int &y,const float &reg
 
     int _neg_free = 10000;
     int neg_free = 10000;
-    int neg_pos = -1;
+    int neg_pos = -1;   //neighbor position
     cv::Mat neg_list = cv::Mat::zeros(neg_free,3,CV_32F);
 
     double pixdist=0;

@@ -236,8 +236,6 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, cv::Mat
 
     imRGBOut = _imRGB;
 
-
-
     if (!mCurrentFrame.mTcw.empty())
     {
         mGeometry.GeometricModelCorrection(mCurrentFrame,imDepth,imMask);
@@ -412,7 +410,6 @@ void Tracking::Track()
                 if(!mbVO)
                 {
                     // In last frame we tracked enough MapPoints in the map
-
                     if(!mVelocity.empty())
                     {
                         bOK = TrackWithMotionModel();
