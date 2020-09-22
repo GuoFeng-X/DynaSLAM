@@ -1,4 +1,10 @@
-# Vedio Demo
+# Resources
+
+- [How to Use DynaSLAM using Docker? DynaSLAM安装与运行](https://www.ybliu.com/2020/05/how-to-use-dynaslam-using-docker.html)
+- [DynaSLAM: Tracking, Mapping and Inpainting in Dynamic Scenes](https://www.ybliu.com/2020/07/DynaSLAM.html)
+- [DynaSLAM 代码分析](https://www.ybliu.com/2020/07/DynaSLAM-source-code-analysis.html)
+
+# Video Demo
 
 <https://www.bilibili.com/video/av77344939>
 
